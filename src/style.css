@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for the application */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Smooth transitions for interactive elements */
+.transition-colors {
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Custom button hover effects */
+button:focus {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
