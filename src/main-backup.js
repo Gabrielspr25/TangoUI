@@ -1,13 +1,12 @@
 // === IMPORTACIONES ===
 import './style.css'
-import AgenteEquipos from './agentes/AgenteEquipos.jsx'
-import AgentePersonal from './agentes/AgentePersonal.jsx'
-// import { getModuloUnificadoVentasContent } from './agentes/moduloUnificadoVentasSimple.js'
+import { getAgenteEquiposContent } from './agentes/agenteEquipos.js'
+import { getModuloUnificadoVentasContent } from './agentes/moduloUnificadoVentasSimple.js'
 
 // === SISTEMA DE USUARIOS Y PERMISOS ===
 const USER_TYPES = {
   CREATOR: 'CREATOR',
-  ADMIN: 'ADMIN',
+  ADMIN: 'ADMIN', 
   AGENT: 'AGENT',
   BASIC: 'BASIC'
 };
@@ -27,7 +26,7 @@ const USERS_DB = [
   {
     id: 1,
     nombre: 'Gabriel',
-    email: 'gabriel@tangoui.com',
+    email: 'gabriel@tangoui.com', 
     tipo: USER_TYPES.CREATOR,
     plan: 'Enterprise',
     activo: true,
@@ -97,11 +96,11 @@ const MODULE_PERMISSIONS = {
 function hasPermission(modulo) {
   const userType = currentUser.tipo;
   const allowedRoles = MODULE_PERMISSIONS[modulo];
-
+  
   if (!allowedRoles) {
     return false; // Si no está definido, no tiene acceso
   }
-
+  
   return allowedRoles.includes(userType);
 }
 
@@ -146,12 +145,12 @@ function renderMenuItems() {
   return menuItems
     .filter(item => hasPermission(item.id))
     .map((item, index) => {
-      const activeClass = index === 0 ? ' bg-blue-600/20 border border-blue-500/30 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]' : '';
+      const activeClass = index === 0 ? ' bg-gray-700' : '';
       const badgeHtml = item.badge ? `<span class="ml-auto text-xs bg-blue-600 text-white px-2 py-1 rounded-full">${item.badge}</span>` : '';
-
+      
       return `
         <a href="#${item.id}" onclick="navegarA('${item.id}')" 
-           class="nav-item group flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 hover:translate-x-1${activeClass}">
+           class="nav-item group flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition-colors${activeClass}">
           <span class="mr-3">${item.icon}</span>
           ${item.label}
           ${badgeHtml}
@@ -165,7 +164,7 @@ function renderMenuItems() {
 function getUserInfo() {
   const totalModulos = Object.keys(MODULE_PERMISSIONS).length;
   const modulosVisibles = getVisibleModules().length;
-
+  
   return {
     usuario: currentUser.nombre,
     tipo: currentUser.tipo,
@@ -184,7 +183,7 @@ const SUBMODULES = {
     usuarios: 'Usuarios',
     tipoPlan: 'Tipo de Plan',
     tiendas: 'Tiendas',
-
+    socEquipo: 'Soc Equipo',
     features: 'Features',
     mac: 'MAC',
     departamentos: 'Departamentos',
@@ -202,7 +201,7 @@ let currentSubmodule = null;
 function navegarA(module, submodule = null) {
   currentModule = module;
   currentSubmodule = submodule;
-
+  
   // Verificar permisos antes de navegar
   if (!hasPermission(module)) {
     const contentArea = document.querySelector('#content-area');
@@ -221,22 +220,22 @@ function navegarA(module, submodule = null) {
     `;
     return;
   }
-
+  
   // Actualizar navegación activa
   document.querySelectorAll('.nav-item').forEach(item => {
-    item.classList.remove('active', 'bg-white/5', 'text-white');
+    item.classList.remove('active', 'bg-gray-700', 'text-white');
     item.classList.add('text-gray-300');
   });
-
+  
   const activeNav = document.querySelector(`a[href="#${module}"]`);
   if (activeNav) {
-    activeNav.classList.add('active', 'bg-white/5', 'text-white');
+    activeNav.classList.add('active', 'bg-gray-700', 'text-white');
     activeNav.classList.remove('text-gray-300');
   }
-
+  
   // Renderizar contenido
   renderizarContenido();
-
+  
   // Cargar datos específicos después del renderizado
   setTimeout(() => {
     if (currentSubmodule === 'vendedores') {
@@ -251,7 +250,7 @@ function navegarA(module, submodule = null) {
 
 function renderizarContenido() {
   const contentArea = document.querySelector('#content-area');
-
+  
   if (currentSubmodule) {
     const content = getSubmoduleContent(currentModule, currentSubmodule);
     if (content !== null) {
@@ -353,18 +352,18 @@ function renderizarContenido() {
 function getDashboardContent() {
   const userInfo = getUserInfo();
   const visibleModules = getVisibleModules();
-
+  
   return `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-white neon-text-blue neon-text-blue">Dashboard</h1>
-        <span class="px-3 py-1 bg-green-500/20 border border-green-500/30 text-green-300 rounded-full text-sm shadow-[0_0_10px_rgba(74,222,128,0.2)]">SISTEMA CON PERMISOS ✅</span>
+        <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+        <span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">SISTEMA CON PERMISOS ✅</span>
       </div>
       
       <!-- Info del Usuario y Sistema de Permisos -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Usuario Actual -->
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
               <span class="text-white text-xl">�</span>
@@ -387,7 +386,7 @@ function getDashboardContent() {
         </div>
         
         <!-- Módulos Disponibles -->
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
               <span class="text-white text-xl">�</span>
@@ -397,14 +396,14 @@ function getDashboardContent() {
               <p class="text-green-400">${userInfo.modulosVisibles} de ${userInfo.totalModulos}</p>
             </div>
           </div>
-          <div class="w-full bg-white/5 rounded-full h-2">
-            <div class="bg-green-600 h-2 rounded-full" style="width: ${(userInfo.modulosVisibles / userInfo.totalModulos) * 100}%"></div>
+          <div class="w-full bg-gray-700 rounded-full h-2">
+            <div class="bg-green-600 h-2 rounded-full" style="width: ${(userInfo.modulosVisibles/userInfo.totalModulos)*100}%"></div>
           </div>
           <p class="text-xs text-gray-400 mt-2">Módulos disponibles con tu nivel</p>
         </div>
         
         <!-- Sistema SaaS -->
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
               <span class="text-white text-xl">🚀</span>
@@ -428,20 +427,20 @@ function getDashboardContent() {
       </div>
 
       <!-- Módulos Disponibles -->
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h2 class="text-xl font-bold text-white mb-4">📋 Módulos Disponibles para tu Usuario</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
           ${visibleModules.map(module => {
-    const moduleInfo = getModuleInfo(module);
-    return `
-              <div class="glass-button p-4 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer group hover:bg-white/10 hover:scale-105 transition-all duration-300" onclick="navegarA('${module}')">
+            const moduleInfo = getModuleInfo(module);
+            return `
+              <div class="bg-gray-700 p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors cursor-pointer" onclick="navegarA('${module}')">
                 <div class="text-center">
                   <span class="text-2xl">${moduleInfo.icon}</span>
                   <p class="text-xs text-white mt-1 truncate" title="${moduleInfo.label}">${moduleInfo.label}</p>
                 </div>
               </div>
             `;
-  }).join('')}
+          }).join('')}
         </div>
       </div>
 
@@ -449,7 +448,7 @@ function getDashboardContent() {
 
       <!-- Estadísticas del Dashboard -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <span class="text-2xl">👥</span>
@@ -461,7 +460,7 @@ function getDashboardContent() {
           </div>
         </div>
         
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <span class="text-2xl">💰</span>
@@ -473,7 +472,7 @@ function getDashboardContent() {
           </div>
         </div>
         
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
               <span class="text-2xl">🏢</span>
@@ -485,7 +484,7 @@ function getDashboardContent() {
           </div>
         </div>
         
-        <div class="glass-card p-6 rounded-xl">
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <span class="text-2xl">🎯</span>
@@ -532,7 +531,7 @@ function getModuleInfo(moduleId) {
     permisos: { icon: '🔐', label: 'Permisos' },
     agentesIA: { icon: '🤖', label: 'Agentes IA' }
   };
-
+  
   return moduleData[moduleId] || { icon: '❓', label: moduleId };
 }
 
@@ -541,7 +540,7 @@ function getGestionContent() {
   return `
     <div class="space-y-6">
       <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-white neon-text-blue">⚙️ Gestión</h1>
+        <h1 class="text-3xl font-bold text-white">⚙️ Gestión</h1>
         <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">15 SUBMÓDULOS</span>
       </div>
       
@@ -553,7 +552,7 @@ function getGestionContent() {
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         
         <!-- Comisiones -->
-        <div onclick="navegarA('gestion', 'comisiones')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'comisiones')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🧮</div>
             <h3 class="text-sm font-medium text-white">Comisiones</h3>
@@ -561,26 +560,17 @@ function getGestionContent() {
           </div>
         </div>
 
-        <!-- Personal (NUEVO - Unifica Vendedores + Usuarios) -->
-        <div onclick="navegarA('gestion', 'personal')" class="glass-button p-4 rounded-xl border border-purple-500/30 bg-purple-600/10 hover:bg-purple-600/20 transition-all duration-300 cursor-pointer group hover:scale-105">
-          <div class="text-center">
-            <div class="text-2xl mb-2">👥</div>
-            <h3 class="text-sm font-medium text-white">Personal</h3>
-            <p class="text-xs text-purple-400 mt-1">Vendedores + Usuarios</p>
-          </div>
-        </div>
-
-        <!-- Vendedores (Mantener para compatibilidad) -->
-        <div onclick="navegarA('gestion', 'vendedores')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105 opacity-50">
+        <!-- Vendedores -->
+        <div onclick="navegarA('gestion', 'vendedores')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">👩‍💼</div>
             <h3 class="text-sm font-medium text-white">Vendedores</h3>
-            <p class="text-xs text-gray-400 mt-1">Legacy</p>
+            <p class="text-xs text-gray-400 mt-1">Equipo</p>
           </div>
         </div>
 
         <!-- Equipos -->
-        <div onclick="navegarA('gestion', 'equipos')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'equipos')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">📱</div>
             <h3 class="text-sm font-medium text-white">Equipos</h3>
@@ -589,7 +579,7 @@ function getGestionContent() {
         </div>
 
         <!-- Productos -->
-        <div onclick="navegarA('gestion', 'productos')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'productos')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🎯</div>
             <h3 class="text-sm font-medium text-white">Productos</h3>
@@ -597,17 +587,17 @@ function getGestionContent() {
           </div>
         </div>
 
-        <!-- Usuarios (Mantener para compatibilidad) -->
-        <div onclick="navegarA('gestion', 'usuarios')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105 opacity-50">
+        <!-- Usuarios -->
+        <div onclick="navegarA('gestion', 'usuarios')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">👤</div>
             <h3 class="text-sm font-medium text-white">Usuarios</h3>
-            <p class="text-xs text-gray-400 mt-1">Legacy</p>
+            <p class="text-xs text-gray-400 mt-1">Accesos</p>
           </div>
         </div>
 
         <!-- Tipo de Plan -->
-        <div onclick="navegarA('gestion', 'tipoPlan')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'tipoPlan')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">📋</div>
             <h3 class="text-sm font-medium text-white">Tipo de Plan</h3>
@@ -616,7 +606,7 @@ function getGestionContent() {
         </div>
 
         <!-- Tiendas -->
-        <div onclick="navegarA('gestion', 'tiendas')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'tiendas')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🏠</div>
             <h3 class="text-sm font-medium text-white">Tiendas</h3>
@@ -624,10 +614,17 @@ function getGestionContent() {
           </div>
         </div>
 
-
+        <!-- Soc Equipo -->
+        <div onclick="navegarA('gestion', 'socEquipo')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
+          <div class="text-center">
+            <div class="text-2xl mb-2">📄</div>
+            <h3 class="text-sm font-medium text-white">Soc Equipo</h3>
+            <p class="text-xs text-gray-400 mt-1">Sociedades</p>
+          </div>
+        </div>
 
         <!-- Features -->
-        <div onclick="navegarA('gestion', 'features')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'features')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🌍</div>
             <h3 class="text-sm font-medium text-white">Features</h3>
@@ -636,7 +633,7 @@ function getGestionContent() {
         </div>
 
         <!-- MAC -->
-        <div onclick="navegarA('gestion', 'mac')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'mac')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">📖</div>
             <h3 class="text-sm font-medium text-white">MAC</h3>
@@ -645,7 +642,7 @@ function getGestionContent() {
         </div>
 
         <!-- Departamentos -->
-        <div onclick="navegarA('gestion', 'departamentos')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'departamentos')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🏷️</div>
             <h3 class="text-sm font-medium text-white">Departamentos</h3>
@@ -654,7 +651,7 @@ function getGestionContent() {
         </div>
 
         <!-- Razones de Visita -->
-        <div onclick="navegarA('gestion', 'razonesVisita')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'razonesVisita')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">☑️</div>
             <h3 class="text-sm font-medium text-white">Razones Visita</h3>
@@ -663,7 +660,7 @@ function getGestionContent() {
         </div>
 
         <!-- IVU Nacional -->
-        <div onclick="navegarA('gestion', 'ivuNacional')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'ivuNacional')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">💵</div>
             <h3 class="text-sm font-medium text-white">IVU Nacional</h3>
@@ -672,7 +669,7 @@ function getGestionContent() {
         </div>
 
         <!-- Puntos Vendedor -->
-        <div onclick="navegarA('gestion', 'puntosVendedor')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'puntosVendedor')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🎁</div>
             <h3 class="text-sm font-medium text-white">Puntos Vendedor</h3>
@@ -681,7 +678,7 @@ function getGestionContent() {
         </div>
 
         <!-- Contratos -->
-        <div onclick="navegarA('gestion', 'contratos')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'contratos')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">✍️</div>
             <h3 class="text-sm font-medium text-white">Contratos</h3>
@@ -692,7 +689,7 @@ function getGestionContent() {
         <!-- === NUEVOS AGENTES ESPECIALIZADOS === -->
         
         <!-- Activaciones -->
-        <div onclick="navegarA('gestion', 'activaciones')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'activaciones')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🔄</div>
             <h3 class="text-sm font-medium text-white">Activaciones</h3>
@@ -701,7 +698,7 @@ function getGestionContent() {
         </div>
 
         <!-- Cambios -->
-        <div onclick="navegarA('gestion', 'cambios')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'cambios')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">🔄</div>
             <h3 class="text-sm font-medium text-white">Cambios</h3>
@@ -710,7 +707,7 @@ function getGestionContent() {
         </div>
 
         <!-- Inventario -->
-        <div onclick="navegarA('gestion', 'inventario')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'inventario')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">📦</div>
             <h3 class="text-sm font-medium text-white">Inventario</h3>
@@ -719,7 +716,7 @@ function getGestionContent() {
         </div>
 
         <!-- Subsidios -->
-        <div onclick="navegarA('gestion', 'subsidios')" class="glass-button p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:scale-105">
+        <div onclick="navegarA('gestion', 'subsidios')" class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer">
           <div class="text-center">
             <div class="text-2xl mb-2">💰</div>
             <h3 class="text-sm font-medium text-white">Subsidios</h3>
@@ -734,16 +731,17 @@ function getGestionContent() {
 
 // === FUNCIÓN PARA OBTENER CONTENIDO DE SUBMÓDULOS ===
 function getSubmoduleContent(module, submodule) {
-  switch (submodule) {
-    case 'personal':
-      return AgentePersonal();
+  switch(submodule) {
     case 'vendedores':
       return getVendedoresContent();
     case 'comisiones':
       return getComisionesContent();
     case 'equipos':
-      // Usar el nuevo componente AgenteEquipos
-      return AgenteEquipos();
+      // Usar la nueva función refactorizada
+      const contenidoDiv = document.getElementById('contenido');
+      contenidoDiv.innerHTML = '';
+      contenidoDiv.appendChild(getAgenteEquiposContent());
+      return null; // Ya se insertó directamente
     case 'productos':
       return getProductosContent();
     case 'usuarios':
@@ -752,7 +750,8 @@ function getSubmoduleContent(module, submodule) {
       return getTipoPlanContent();
     case 'tiendas':
       return getTiendasContent();
-
+    case 'socEquipo':
+      return getSocEquipoContent();
     case 'features':
       return getFeaturesContent();
     case 'mac':
@@ -780,7 +779,7 @@ function getSubmoduleContent(module, submodule) {
       return `<div class="text-center py-8">
         <h3 class="text-lg font-medium text-white mb-2">Submódulo en construcción</h3>
         <p class="text-gray-400">Este submódulo estará disponible próximamente.</p>
-        <button onclick="navegarA('gestion')" class="mt-4 px-4 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md">← Volver a Gestión</button>
       </div>`;
   }
 }
@@ -791,7 +790,7 @@ function getVendedoresContent() {
     <div class="space-y-6">
       <!-- Header del módulo -->
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">👥 Gestión de Vendedores</h2>
@@ -811,7 +810,7 @@ function getVendedoresContent() {
       </div>
 
       <!-- Formulario de nuevo vendedor (inicialmente oculto) -->
-      <div id="formulario-vendedor" class="hidden glass-panel rounded-xl p-6">
+      <div id="formulario-vendedor" class="hidden bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">📝 Registrar Nuevo Vendedor</h3>
         <form id="form-vendedor" onsubmit="guardarVendedor(event)" class="space-y-4">
           <!-- Sección de foto de perfil -->
@@ -837,35 +836,35 @@ function getVendedoresContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Nombre *</label>
               <input type="text" id="vendedor_nombre" name="nombre" required 
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="Juan">
             </div>
             <!-- Apellido -->
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Apellido *</label>
               <input type="text" id="vendedor_apellido" name="apellido" required 
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="Pérez">
             </div>
             <!-- Email -->
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
               <input type="email" id="vendedor_email" name="email" required 
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="juan.perez@empresa.com">
             </div>
             <!-- Teléfono -->
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Teléfono *</label>
               <input type="tel" id="vendedor_telefono" name="telefono" required 
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="+1 (787) 123-4567">
             </div>
             <!-- Equipo -->
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-300 mb-2">Equipo de Ventas</label>
               <select id="vendedor_equipo" name="equipo_id" 
-                      class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Seleccionar equipo</option>
                 <option value="1">Equipo Alpha</option>
                 <option value="2">Equipo Beta</option>
@@ -877,7 +876,7 @@ function getVendedoresContent() {
           <!-- Botones -->
           <div class="flex justify-end space-x-3 pt-4">
             <button type="button" onclick="cerrarFormularioVendedor()" 
-                    class="px-4 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors">
+                    class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors">
               ❌ Cancelar
             </button>
             <button type="submit" 
@@ -889,8 +888,8 @@ function getVendedoresContent() {
       </div>
 
       <!-- Lista de vendedores -->
-      <div class="bg-gray-800 rounded-lg border border-white/10">
-        <div class="px-6 py-4 border-b border-white/10">
+      <div class="bg-gray-800 rounded-lg border border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-700">
           <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-white">📋 Lista de Vendedores</h3>
             <div class="flex items-center space-x-2">
@@ -903,7 +902,7 @@ function getVendedoresContent() {
         <!-- Tabla de vendedores -->
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-transparent">
+            <thead class="bg-gray-900">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Vendedor</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Contacto</th>
@@ -938,7 +937,7 @@ function getComisionesContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">💰 Gestión de Comisiones</h2>
       </div>
       <div class="text-center py-8">
@@ -953,7 +952,7 @@ function getEquiposContent() {
     <div class="space-y-6">
       <!-- Header del módulo -->
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">📱 Gestión de Equipos</h2>
@@ -973,7 +972,7 @@ function getEquiposContent() {
       </div>
 
       <!-- Formulario de nuevo equipo (inicialmente oculto) -->
-      <div id="formulario-equipo" class="hidden glass-panel rounded-xl p-6">
+      <div id="formulario-equipo" class="hidden bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">📱 Registrar Nuevo Equipo</h3>
         <form id="form-equipo" onsubmit="guardarEquipo(event)" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -981,7 +980,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Marca *</label>
               <select id="equipo_marca" name="marca" required 
-                      class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Seleccionar marca</option>
                 <option value="Apple">Apple</option>
                 <option value="Samsung">Samsung</option>
@@ -1005,7 +1004,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Modelo *</label>
               <input type="text" id="equipo_modelo" name="modelo" required 
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="Ej: iPhone 15 Pro, Galaxy S24, Redmi Note 13">
             </div>
 
@@ -1013,7 +1012,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Tipo de Dispositivo *</label>
               <select id="equipo_tipo" name="tipo" required 
-                      class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Seleccionar tipo</option>
                 <option value="Smartphone">📱 Smartphone</option>
                 <option value="Tablet">📟 Tablet</option>
@@ -1029,7 +1028,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Costo (USD)</label>
               <input type="number" id="equipo_costo" name="costo" step="0.01" min="0"
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="0.00">
             </div>
 
@@ -1038,7 +1037,7 @@ function getEquiposContent() {
               <label class="block text-sm font-medium text-gray-300 mb-2">IMEI *</label>
               <input type="text" id="equipo_imei" name="imei" required 
                      maxlength="15" pattern="[0-9]{15}"
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="123456789012345">
               <p class="text-xs text-gray-400 mt-1">15 dígitos numéricos únicos</p>
             </div>
@@ -1046,7 +1045,7 @@ function getEquiposContent() {
             <!-- Externo (Checkbox) -->
             <div class="flex items-center space-x-3">
               <input type="checkbox" id="equipo_externo" name="externo" 
-                     class="h-5 w-5 text-blue-600 bg-white/5 border-gray-600 rounded focus:ring-blue-500 focus:ring-2">
+                     class="h-5 w-5 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2">
               <label for="equipo_externo" class="text-sm font-medium text-gray-300">
                 🌐 Equipo Externo
               </label>
@@ -1056,7 +1055,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Vendedor Asignado</label>
               <select id="equipo_vendedor" name="vendedor_id" 
-                      class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Sin asignar</option>
                 <!-- Los vendedores se cargarán dinámicamente desde el backend -->
               </select>
@@ -1065,7 +1064,7 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Estado *</label>
               <select id="equipo_estado" name="estado" required 
-                      class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="activo">🟢 Activo</option>
                 <option value="inactivo">🟡 Inactivo</option>
                 <option value="mantenimiento">🔧 En Mantenimiento</option>
@@ -1078,20 +1077,20 @@ function getEquiposContent() {
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Número de Serie</label>
               <input type="text" id="equipo_serie" name="numero_serie"
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                      placeholder="S/N del dispositivo">
             </div>
             <!-- Fecha de Adquisición -->
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Fecha de Adquisición</label>
               <input type="date" id="equipo_fecha" name="fecha_adquisicion"
-                     class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <!-- Observaciones -->
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-300 mb-2">Observaciones</label>
               <textarea id="equipo_observaciones" name="observaciones" rows="3"
-                        class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                        class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
                         placeholder="Comentarios adicionales sobre el equipo..."></textarea>
             </div>
           </div>
@@ -1099,7 +1098,7 @@ function getEquiposContent() {
           <!-- Botones -->
           <div class="flex justify-end space-x-3 pt-4">
             <button type="button" onclick="cerrarFormularioEquipo()" 
-                    class="px-4 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors">
+                    class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors">
               ❌ Cancelar
             </button>
             <button type="submit" 
@@ -1111,8 +1110,8 @@ function getEquiposContent() {
       </div>
 
       <!-- Lista de equipos -->
-      <div class="bg-gray-800 rounded-lg border border-white/10">
-        <div class="px-6 py-4 border-b border-white/10">
+      <div class="bg-gray-800 rounded-lg border border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-700">
           <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-white">📋 Lista de Equipos</h3>
             <div class="flex items-center space-x-2">
@@ -1125,7 +1124,7 @@ function getEquiposContent() {
         <!-- Tabla de equipos -->
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-transparent">
+            <thead class="bg-gray-900">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Marca/Modelo</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">IMEI</th>
@@ -1161,7 +1160,7 @@ function getProductosContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">📦 Gestión de Productos</h2>
       </div>
       <div class="text-center py-8">
@@ -1175,7 +1174,7 @@ function getUsuariosContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">👤 Gestión de Usuarios</h2>
       </div>
       <div class="text-center py-8">
@@ -1189,7 +1188,7 @@ function getTipoPlanContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">📄 Gestión de Tipo de Plan</h2>
       </div>
       <div class="text-center py-8">
@@ -1203,7 +1202,7 @@ function getTiendasContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">🏪 Gestión de Tiendas</h2>
       </div>
       <div class="text-center py-8">
@@ -1217,7 +1216,7 @@ function getSocEquipoContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">👥 Gestión de Soc Equipo</h2>
       </div>
       <div class="text-center py-8">
@@ -1231,7 +1230,7 @@ function getFeaturesContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">⚡ Gestión de Features</h2>
       </div>
       <div class="text-center py-8">
@@ -1245,7 +1244,7 @@ function getMacContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">💻 Gestión de MAC</h2>
       </div>
       <div class="text-center py-8">
@@ -1259,7 +1258,7 @@ function getDepartamentosContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">🏛️ Gestión de Departamentos</h2>
       </div>
       <div class="text-center py-8">
@@ -1273,7 +1272,7 @@ function getRazonesVisitaContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">📝 Gestión de Razones de Visita</h2>
       </div>
       <div class="text-center py-8">
@@ -1287,7 +1286,7 @@ function getIvuNacionalContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">🧾 Gestión de IVU Nacional</h2>
       </div>
       <div class="text-center py-8">
@@ -1301,7 +1300,7 @@ function getPuntosVendedorContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">← Volver a Gestión</button>
         <h2 class="text-2xl font-bold text-white">🎯 Gestión de Puntos Vendedor</h2>
       </div>
       <div class="text-center py-8">
@@ -1315,11 +1314,11 @@ function getPuntosVendedorContent() {
 function getContratosContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📋 Contratos</h1>
+      <h1 class="text-3xl font-bold text-white">📋 Contratos</h1>
       <p class="text-gray-400">Gestión de contratos y importación de datos</p>
       
       <!-- Sección de Importación de Datos -->
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-white flex items-center">
             <span class="text-2xl mr-3">📊</span>
@@ -1340,7 +1339,7 @@ function getContratosContent() {
         
         <!-- Progress -->
         <div id="upload-progress" class="hidden mb-6">
-          <div class="bg-white/5 rounded-full h-2 mb-2">
+          <div class="bg-gray-700 rounded-full h-2 mb-2">
             <div id="progress-bar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
           </div>
           <p id="progress-text" class="text-sm text-gray-400">Subiendo archivo...</p>
@@ -1360,7 +1359,7 @@ function getContratosContent() {
             <!-- Preview -->
             <div class="space-y-4">
               <h3 class="text-lg font-medium text-white">Vista previa (primeras filas)</h3>
-              <div class="bg-transparent rounded-lg p-4 overflow-x-auto">
+              <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                 <table id="preview-table" class="w-full text-sm">
                   <!-- Preview data will be shown here -->
                 </table>
@@ -1369,12 +1368,12 @@ function getContratosContent() {
           </div>
           
           <!-- Import Controls -->
-          <div class="flex justify-between items-center mt-6 pt-4 border-t border-white/10">
+          <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-700">
             <div class="text-sm text-gray-400">
               <span id="file-info">Archivo seleccionado</span>
             </div>
             <div class="space-x-3">
-              <button onclick="resetUpload()" class="bg-gray-600 hover:bg-white/5 text-white px-4 py-2 rounded-md">
+              <button onclick="resetUpload()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
                 Cancelar
               </button>
               <button onclick="importData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
@@ -1386,12 +1385,12 @@ function getContratosContent() {
       </div>
       
       <!-- Contratos Table -->
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h2 class="text-xl font-semibold text-white mb-4">Contratos Registrados</h2>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-white/10">
+              <tr class="border-b border-gray-700">
                 <th class="text-left py-2 text-gray-300">BAN</th>
                 <th class="text-left py-2 text-gray-300">SUB</th>
                 <th class="text-left py-2 text-gray-300">SUB_STATUS</th>
@@ -1516,7 +1515,7 @@ function getContratosContent() {
               <span class="text-sm font-medium text-gray-300">COLUMNA EN ARCHIVO</span>
               <div class="text-lg font-semibold text-white">\${column}</div>
             </label>
-            <select class="w-full bg-white/5 border border-gray-600 rounded-md px-3 py-2 text-white" 
+            <select class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white" 
                     onchange="updateMapping('\${column}', this.value)">
               <option value="">Ignorar</option>
               \${data.availableFields.map(field => 
@@ -1536,7 +1535,7 @@ function getContratosContent() {
         // Generate preview table
         let tableHTML = '<thead><tr>';
         data.columns.forEach(col => {
-          tableHTML += \`<th class="text-left py-1 px-2 text-gray-300 border-b border-white/10">\${col}</th>\`;
+          tableHTML += \`<th class="text-left py-1 px-2 text-gray-300 border-b border-gray-700">\${col}</th>\`;
         });
         tableHTML += '</tr></thead><tbody>';
         
@@ -1593,7 +1592,7 @@ function getContratosContent() {
 function getReportesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📈 Reportes</h1>
+      <h1 class="text-3xl font-bold text-white">📈 Reportes</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de reportes en desarrollo...</p>
       </div>
@@ -1606,9 +1605,9 @@ function getAgentesIAContent() {
     <div class="space-y-6" id="agentes-container">
       <!-- Header con Toggle de Visibilidad -->
       <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-white neon-text-blue">🤖 Panel de Administración</h1>
+        <h1 class="text-3xl font-bold text-white">🤖 Panel de Administración</h1>
         <div class="flex space-x-3">
-          <button onclick="toggleSystemInfo()" class="px-4 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md text-sm">
+          <button onclick="toggleSystemInfo()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm">
             👁️ Toggle Info Sistema
           </button>
           <span class="px-3 py-1 bg-red-600 text-white rounded-full text-sm">CREADOR ONLY</span>
@@ -1618,7 +1617,7 @@ function getAgentesIAContent() {
       <!-- Información del Sistema (Ocultable) -->
       <div id="system-info" class="bg-red-900/20 border border-red-700/50 rounded-lg p-4">
         <div class="grid md:grid-cols-3 gap-4">
-          <div class="bg-gray-800 p-4 rounded-lg border border-white/10">
+          <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
             <h3 class="text-lg font-medium text-white mb-2">📊 Estado del Sistema</h3>
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
@@ -1640,7 +1639,7 @@ function getAgentesIAContent() {
             </div>
           </div>
           
-          <div class="bg-gray-800 p-4 rounded-lg border border-white/10">
+          <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
             <h3 class="text-lg font-medium text-white mb-2">🔧 Configuración</h3>
             <div class="space-y-2">
               <button class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md">
@@ -1655,7 +1654,7 @@ function getAgentesIAContent() {
             </div>
           </div>
           
-          <div class="bg-gray-800 p-4 rounded-lg border border-white/10">
+          <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
             <h3 class="text-lg font-medium text-white mb-2">💰 Monetización</h3>
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
@@ -1676,7 +1675,7 @@ function getAgentesIAContent() {
       </div>
 
       <!-- Sistema de Agentes de Ventas -->
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-semibold text-white">👥 Agentes de Ventas</h2>
           <button onclick="abrirFormularioAgente()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
@@ -1685,21 +1684,21 @@ function getAgentesIAContent() {
         </div>
         
         <!-- Formulario Nuevo Agente (Oculto inicialmente) -->
-        <div id="formulario-agente" class="hidden mb-6 bg-transparent rounded-lg p-4 border border-gray-600">
+        <div id="formulario-agente" class="hidden mb-6 bg-gray-900 rounded-lg p-4 border border-gray-600">
           <h3 class="text-lg font-medium text-white mb-4">Registrar Nuevo Agente</h3>
           <form class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-300 mb-2">Nombre Completo</label>
-                <input type="text" id="agente-nombre" class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nombre del agente">
+                <input type="text" id="agente-nombre" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nombre del agente">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input type="email" id="agente-email" class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="agente@empresa.com">
+                <input type="email" id="agente-email" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="agente@empresa.com">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-300 mb-2">Plan Asignado</label>
-                <select id="agente-plan" class="w-full px-3 py-2 bg-white/5 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="agente-plan" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="basico">Plan Básico - $50/mes</option>
                   <option value="pro">Plan Pro - $120/mes</option>
                   <option value="enterprise">Plan Enterprise - $300/mes</option>
@@ -1712,35 +1711,35 @@ function getAgentesIAContent() {
               <label class="block text-sm font-medium text-gray-300 mb-3">Permisos de Módulos</label>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="gestion" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="gestion" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Gestión</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="reportes" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="reportes" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Reportes</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="inventario" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="inventario" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Inventario</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="crm" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="crm" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">CRM</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="ventas" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="ventas" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Generar Venta</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="documentos" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="documentos" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Documentos</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="administracion" class="rounded bg-white/5 border-gray-600">
+                  <input type="checkbox" value="administracion" class="rounded bg-gray-700 border-gray-600">
                   <span class="text-sm text-gray-300">Administración</span>
                 </label>
                 <label class="flex items-center space-x-2">
-                  <input type="checkbox" value="todos" class="rounded bg-white/5 border-gray-600" onchange="toggleTodosPermisos(this)">
+                  <input type="checkbox" value="todos" class="rounded bg-gray-700 border-gray-600" onchange="toggleTodosPermisos(this)">
                   <span class="text-sm text-yellow-300">🔓 Todos</span>
                 </label>
               </div>
@@ -1750,7 +1749,7 @@ function getAgentesIAContent() {
               <button type="button" onclick="guardarAgente()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors">
                 💾 Guardar Agente
               </button>
-              <button type="button" onclick="cerrarFormularioAgente()" class="px-4 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors">
+              <button type="button" onclick="cerrarFormularioAgente()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors">
                 ❌ Cancelar
               </button>
             </div>
@@ -1761,7 +1760,7 @@ function getAgentesIAContent() {
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-white/10">
+              <tr class="border-b border-gray-700">
                 <th class="text-left py-3 text-gray-300">Agente</th>
                 <th class="text-left py-3 text-gray-300">Email</th>
                 <th class="text-left py-3 text-gray-300">Plan</th>
@@ -1772,7 +1771,7 @@ function getAgentesIAContent() {
             </thead>
             <tbody id="agentes-lista">
               <!-- Los agentes se cargarán dinámicamente desde el backend -->
-              <tr class="border-b border-white/10">
+              <tr class="border-b border-gray-700">
                 <td colspan="6" class="py-8 text-center text-gray-400">
                   <div class="flex flex-col items-center">
                     <svg class="h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1867,7 +1866,7 @@ function getAgentesIAContent() {
         const planColor = plan === 'enterprise' ? 'purple' : plan === 'pro' ? 'blue' : 'green';
         
         const row = document.createElement('tr');
-        row.className = 'border-b border-white/10';
+        row.className = 'border-b border-gray-700';
         row.innerHTML = \`
           <td class="py-3 text-white">\${nombre}</td>
           <td class="py-3 text-gray-400">\${email}</td>
@@ -1935,12 +1934,12 @@ function previewPhoto(event) {
 
     // Crear preview
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = function(e) {
       const preview = document.getElementById('photo-preview');
       preview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover">`;
     };
     reader.readAsDataURL(file);
-
+    
     showSuccessMessage('✅ Foto seleccionada correctamente');
   }
 }
@@ -1968,16 +1967,16 @@ function abrirFormularioEquipo() {
 function cerrarFormularioEquipo() {
   const formulario = document.getElementById('formulario-equipo');
   const form = document.getElementById('form-equipo');
-
+  
   // Ocultar formulario
   formulario.classList.add('hidden');
-
+  
   // Reset formulario
   form.reset();
-
+  
   // Limpiar estado de edición
   form.removeAttribute('data-edit-id');
-
+  
   // Restaurar botón a estado original
   const submitBtn = form.querySelector('button[type="submit"]');
   submitBtn.innerHTML = '💾 Guardar Equipo';
@@ -1990,7 +1989,7 @@ async function cargarEquipos() {
     showLoadingEquipos();
     const response = await fetch('http://localhost:9999/api/gestion/equipos');
     const data = await response.json();
-
+    
     if (data.success) {
       renderEquipos(data.data);
       updateEquiposCount(data.data.length);
@@ -2005,11 +2004,11 @@ async function cargarEquipos() {
 
 async function guardarEquipo(event) {
   event.preventDefault();
-
+  
   const form = event.target;
   const editId = form.getAttribute('data-edit-id');
   const isEditing = !!editId;
-
+  
   try {
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
@@ -2032,10 +2031,10 @@ async function guardarEquipo(event) {
       observaciones: formData.get('observaciones')
     };
 
-    const url = isEditing
+    const url = isEditing 
       ? `http://localhost:9999/api/gestion/equipos/${editId}`
       : 'http://localhost:9999/api/gestion/equipos';
-
+    
     const method = isEditing ? 'PUT' : 'POST';
 
     const response = await fetch(url, {
@@ -2062,7 +2061,7 @@ async function guardarEquipo(event) {
   } catch (error) {
     console.error('Error guardando equipo:', error);
     showErrorMessage('❌ Error de conexión al servidor');
-
+    
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.innerHTML = isEditing ? '💾 Actualizar Equipo' : '💾 Guardar Equipo';
     submitBtn.disabled = false;
@@ -2073,11 +2072,11 @@ async function cargarVendedoresSelect() {
   try {
     const response = await fetch('http://localhost:9999/api/gestion/vendedores');
     const data = await response.json();
-
+    
     if (data.success) {
       const select = document.getElementById('equipo_vendedor');
       select.innerHTML = '<option value="">Sin asignar</option>';
-
+      
       data.data.forEach(vendedor => {
         const option = document.createElement('option');
         option.value = vendedor.id;
@@ -2093,9 +2092,9 @@ async function cargarVendedoresSelect() {
 function setupEquipoFormEvents() {
   const marcaSelect = document.getElementById('equipo_marca');
   const modeloInput = document.getElementById('equipo_modelo');
-
+  
   if (marcaSelect && modeloInput) {
-    marcaSelect.addEventListener('change', function () {
+    marcaSelect.addEventListener('change', function() {
       const marca = this.value;
       if (marca && marca !== 'Otro') {
         // Sugerencias de modelos populares por marca
@@ -2108,7 +2107,7 @@ function setupEquipoFormEvents() {
           'OnePlus': 'OnePlus 12, OnePlus 11, Nord CE 3',
           'Motorola': 'Edge 40, Moto G84, Edge 30'
         };
-
+        
         if (sugerencias[marca]) {
           modeloInput.placeholder = `Ej: ${sugerencias[marca]}`;
         }
@@ -2140,13 +2139,13 @@ async function cargarEstadisticasDashboard() {
     // Actualizar estadísticas en el DOM
     const statVendedores = await vendedores;
     const statEquipos = await equipos;
-
-    document.getElementById('stat-vendedores').textContent =
+    
+    document.getElementById('stat-vendedores').textContent = 
       statVendedores ? statVendedores.length || '0' : '0';
-
-    document.getElementById('stat-equipos').textContent =
+    
+    document.getElementById('stat-equipos').textContent = 
       statEquipos ? statEquipos.length || '0' : '0';
-
+    
     document.getElementById('stat-ventas').textContent = '$0.00';
     document.getElementById('stat-meta').textContent = '0%';
 
@@ -2163,7 +2162,7 @@ async function cargarEstadisticasDashboard() {
 function renderEquipos(equipos) {
   const tbody = document.getElementById('tabla-equipos');
   const loadingDiv = document.getElementById('loading-equipos');
-
+  
   if (!equipos || equipos.length === 0) {
     tbody.innerHTML = `
       <tr>
@@ -2184,9 +2183,9 @@ function renderEquipos(equipos) {
       const costoFormateado = equipo.costo ? `$${parseFloat(equipo.costo).toFixed(2)}` : 'N/A';
       const externoIcon = equipo.externo ? '🌐' : '🏢';
       const externoText = equipo.externo ? 'Externo' : 'Interno';
-
+      
       return `
-        <tr class="hover:bg-white/5">
+        <tr class="hover:bg-gray-700">
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center">
               <div class="h-10 w-10 rounded bg-gray-600 flex items-center justify-center mr-3">
@@ -2230,12 +2229,12 @@ function renderEquipos(equipos) {
       `;
     }).join('');
   }
-
+  
   loadingDiv.style.display = 'none';
 }
 
 function getEstadoColor(estado) {
-  switch (estado) {
+  switch(estado) {
     case 'activo': return 'bg-green-600 text-white';
     case 'inactivo': return 'bg-yellow-600 text-white';
     case 'mantenimiento': return 'bg-blue-600 text-white';
@@ -2247,7 +2246,7 @@ function getEstadoColor(estado) {
 }
 
 function getEstadoTexto(estado) {
-  switch (estado) {
+  switch(estado) {
     case 'activo': return '🟢 Activo';
     case 'inactivo': return '🟡 Inactivo';
     case 'mantenimiento': return '🔧 Mantenimiento';
@@ -2281,7 +2280,7 @@ function updateEquiposCount(count) {
 function showErrorEquipos(message) {
   const tbody = document.getElementById('tabla-equipos');
   const loadingDiv = document.getElementById('loading-equipos');
-
+  
   tbody.innerHTML = `
     <tr>
       <td colspan="6" class="px-6 py-8 text-center text-red-400">
@@ -2305,13 +2304,13 @@ async function editarEquipo(id) {
     // Obtener los datos del equipo
     const response = await fetch(`http://localhost:9999/api/gestion/equipos`);
     const data = await response.json();
-
+    
     if (data.success) {
       const equipo = data.data.find(e => e.id == id);
       if (equipo) {
         // Abrir el formulario y cargar los datos
         abrirFormularioEquipo();
-
+        
         // Llenar el formulario con los datos existentes
         setTimeout(() => {
           document.getElementById('equipo_marca').value = equipo.marca || '';
@@ -2325,17 +2324,17 @@ async function editarEquipo(id) {
           document.getElementById('equipo_serie').value = equipo.numero_serie || '';
           document.getElementById('equipo_fecha').value = equipo.fecha_adquisicion || '';
           document.getElementById('equipo_observaciones').value = equipo.observaciones || '';
-
+          
           // Cambiar el comportamiento del formulario para actualización
           const form = document.getElementById('form-equipo');
           form.setAttribute('data-edit-id', id);
-
+          
           const submitBtn = form.querySelector('button[type="submit"]');
           submitBtn.innerHTML = '💾 Actualizar Equipo';
           submitBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
           submitBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
         }, 100);
-
+        
       } else {
         showErrorMessage('❌ Equipo no encontrado');
       }
@@ -2376,7 +2375,7 @@ async function cargarVendedores() {
     showLoadingVendedores();
     const response = await fetch('http://localhost:9999/api/gestion/vendedores');
     const data = await response.json();
-
+    
     if (data.success) {
       renderVendedores(data.data);
       updateVendedoresCount(data.data.length);
@@ -2391,9 +2390,9 @@ async function cargarVendedores() {
 
 async function guardarVendedor(event) {
   event.preventDefault();
-
+  
   const formData = new FormData(event.target);
-
+  
   try {
     // Mostrar loading en el botón
     const submitBtn = event.target.querySelector('button[type="submit"]');
@@ -2425,7 +2424,7 @@ async function guardarVendedor(event) {
   } catch (error) {
     console.error('Error guardando vendedor:', error);
     showErrorMessage('❌ Error de conexión al servidor');
-
+    
     // Restaurar botón
     const submitBtn = event.target.querySelector('button[type="submit"]');
     submitBtn.innerHTML = '💾 Guardar Vendedor';
@@ -2436,7 +2435,7 @@ async function guardarVendedor(event) {
 function renderVendedores(vendedores) {
   const tbody = document.getElementById('tabla-vendedores');
   const loadingDiv = document.getElementById('loading-vendedores');
-
+  
   if (!vendedores || vendedores.length === 0) {
     tbody.innerHTML = `
       <tr>
@@ -2453,16 +2452,16 @@ function renderVendedores(vendedores) {
     `;
   } else {
     tbody.innerHTML = vendedores.map(vendedor => `
-      <tr class="hover:bg-white/5">
+      <tr class="hover:bg-gray-700">
         <td class="px-6 py-4 whitespace-nowrap">
           <div class="flex items-center">
             <div class="h-10 w-10 rounded-full overflow-hidden border border-gray-600 bg-blue-600 flex-shrink-0">
-              ${vendedor.foto_url ?
-        `<img src="${vendedor.foto_url}" alt="${vendedor.nombre}" class="h-full w-full object-cover">` :
-        `<div class="h-full w-full bg-blue-600 flex items-center justify-center">
+              ${vendedor.foto_url ? 
+                `<img src="${vendedor.foto_url}" alt="${vendedor.nombre}" class="h-full w-full object-cover">` :
+                `<div class="h-full w-full bg-blue-600 flex items-center justify-center">
                   <span class="text-white font-medium text-sm">${vendedor.nombre.charAt(0)}${vendedor.apellido ? vendedor.apellido.charAt(0) : ''}</span>
                 </div>`
-      }
+              }
             </div>
             <div class="ml-4">
               <div class="text-sm font-medium text-white">${vendedor.nombre} ${vendedor.apellido || ''}</div>
@@ -2493,7 +2492,7 @@ function renderVendedores(vendedores) {
       </tr>
     `).join('');
   }
-
+  
   loadingDiv.style.display = 'none';
 }
 
@@ -2514,7 +2513,7 @@ function updateVendedoresCount(count) {
 function showErrorVendedores(message) {
   const tbody = document.getElementById('tabla-vendedores');
   const loadingDiv = document.getElementById('loading-vendedores');
-
+  
   tbody.innerHTML = `
     <tr>
       <td colspan="5" class="px-6 py-8 text-center text-red-400">
@@ -2561,14 +2560,15 @@ function showInfoMessage(message) {
 function showNotification(message, type = 'info') {
   // Crear elemento de notificación
   const notification = document.createElement('div');
-  notification.className = `fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 transition-all duration-300 ${type === 'success' ? 'bg-green-600 text-white' :
+  notification.className = `fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 transition-all duration-300 ${
+    type === 'success' ? 'bg-green-600 text-white' :
     type === 'error' ? 'bg-red-600 text-white' :
-      'bg-blue-600 text-white'
-    }`;
+    'bg-blue-600 text-white'
+  }`;
   notification.innerHTML = message;
-
+  
   document.body.appendChild(notification);
-
+  
   // Remover después de 3 segundos
   setTimeout(() => {
     notification.remove();
@@ -2616,14 +2616,14 @@ window.eliminarEquipo = eliminarEquipo;
 
 // === RENDERIZAR LA APLICACIÓN ===
 document.querySelector('#app').innerHTML = `
-  <div class="min-h-screen bg-gray-950 flex font-sans text-gray-100">
+  <div class="min-h-screen bg-gray-900 flex">
     <!-- Sidebar Navigation -->
-    <div class="w-64 glass-panel border-r border-white/5 z-20">
+    <div class="w-64 bg-gray-800 shadow-lg border-r border-gray-700">
       <div class="flex flex-col h-full">
         <!-- Logo/Header -->
-        <div class="flex items-center justify-center h-16 px-4 border-b border-white/5 bg-transparent/50">
-          <h1 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 neon-text-blue">🚀 TangoUI</h1>
-          <span class="ml-2 px-2 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs rounded-full">FIJO</span>
+        <div class="flex items-center justify-center h-16 px-4 bg-gray-900 border-b border-gray-700">
+          <h1 class="text-xl font-bold text-white">🚀 TangoUI</h1>
+          <span class="ml-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">FIJO</span>
         </div>
         
         <!-- Navigation Menu -->
@@ -2632,9 +2632,9 @@ document.querySelector('#app').innerHTML = `
         </nav>
         
         <!-- Footer del Sidebar -->
-        <div class="px-2 py-4 border-t border-white/5 bg-transparent/30">
+        <div class="px-2 py-4 border-t border-gray-700">
           <div class="flex items-center px-3 py-2">
-            <div class="w-2 h-2 bg-green-400 rounded-full mr-2 shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
+            <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
             <span class="text-xs text-gray-400">Sistema Oficial ✅</span>
           </div>
           <div class="text-xs text-gray-500 px-3" id="modules-count">
@@ -2648,28 +2648,22 @@ document.querySelector('#app').innerHTML = `
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-      <!-- Background Glow Effects -->
-      <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px]"></div>
-        <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px]"></div>
-      </div>
-
+    <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Top Bar -->
-      <header class="glass-panel border-b border-white/5 px-6 py-4 z-10">
+      <header class="bg-gray-800 border-b border-gray-700 px-6 py-4">
         <div class="flex justify-between items-center">
           <div>
-            <h1 class="text-xl font-semibold text-white neon-text-blue">Dashboard</h1>
+            <h1 class="text-xl font-semibold text-white">Dashboard</h1>
             <p class="text-sm text-gray-400">ESTRUCTURA OFICIAL ✅</p>
           </div>
-          <button class="px-4 py-2 bg-blue-600/80 hover:bg-blue-600 text-white text-sm rounded-md transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] border border-blue-400/30">
+          <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition-colors">
             🔧 Actualizar
           </button>
         </div>
       </header>
 
       <!-- Content -->
-      <main id="content-area" class="flex-1 overflow-y-auto p-6 z-10 relative">
+      <main id="content-area" class="flex-1 overflow-y-auto bg-gray-900 p-6">
         <!-- El contenido se renderiza aquí dinámicamente -->
       </main>
     </div>
@@ -2681,7 +2675,7 @@ document.querySelector('#app').innerHTML = `
 function getGenerarVentaContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🛒 Generar Venta</h1>
+      <h1 class="text-3xl font-bold text-white">🛒 Generar Venta</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de generación de ventas en desarrollo...</p>
       </div>
@@ -2692,7 +2686,7 @@ function getGenerarVentaContent() {
 function getPymesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🏪 Pymes</h1>
+      <h1 class="text-3xl font-bold text-white">🏪 Pymes</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de Pymes en desarrollo...</p>
       </div>
@@ -2703,7 +2697,7 @@ function getPymesContent() {
 function getActivacionesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">👥 Activaciones</h1>
+      <h1 class="text-3xl font-bold text-white">👥 Activaciones</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de activaciones en desarrollo...</p>
       </div>
@@ -2714,7 +2708,7 @@ function getActivacionesContent() {
 function getConsultarBaseGeneralContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">💰 Consultar Base General</h1>
+      <h1 class="text-3xl font-bold text-white">💰 Consultar Base General</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de consulta de base general en desarrollo...</p>
       </div>
@@ -2725,7 +2719,7 @@ function getConsultarBaseGeneralContent() {
 function getConsultarBaseFijoContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">💰 Consultar Base General FIJO</h1>
+      <h1 class="text-3xl font-bold text-white">💰 Consultar Base General FIJO</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de consulta de base FIJO en desarrollo...</p>
       </div>
@@ -2736,7 +2730,7 @@ function getConsultarBaseFijoContent() {
 function getPagoFacturaContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">💳 Pago Factura</h1>
+      <h1 class="text-3xl font-bold text-white">💳 Pago Factura</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de pago de facturas en desarrollo...</p>
       </div>
@@ -2747,7 +2741,7 @@ function getPagoFacturaContent() {
 function getDiscrepanciasPagoContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📋 Discrepancias de Pago de factura</h1>
+      <h1 class="text-3xl font-bold text-white">📋 Discrepancias de Pago de factura</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de discrepancias de pago en desarrollo...</p>
       </div>
@@ -2758,7 +2752,7 @@ function getDiscrepanciasPagoContent() {
 function getInventarioContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📦 Inventario</h1>
+      <h1 class="text-3xl font-bold text-white">📦 Inventario</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de inventario en desarrollo...</p>
       </div>
@@ -2769,7 +2763,7 @@ function getInventarioContent() {
 function getAccesoriosContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🎧 Accesorios</h1>
+      <h1 class="text-3xl font-bold text-white">🎧 Accesorios</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de accesorios en desarrollo...</p>
       </div>
@@ -2780,7 +2774,7 @@ function getAccesoriosContent() {
 function getDocumentosContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📁 Documentos</h1>
+      <h1 class="text-3xl font-bold text-white">📁 Documentos</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de documentos en desarrollo...</p>
       </div>
@@ -2791,7 +2785,7 @@ function getDocumentosContent() {
 function getCuentasClientesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">👥 Cuentas Clientes</h1>
+      <h1 class="text-3xl font-bold text-white">👥 Cuentas Clientes</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de cuentas de clientes en desarrollo...</p>
       </div>
@@ -2802,7 +2796,7 @@ function getCuentasClientesContent() {
 function getCRMContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🎯 CRM</h1>
+      <h1 class="text-3xl font-bold text-white">🎯 CRM</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de CRM en desarrollo...</p>
       </div>
@@ -2813,7 +2807,7 @@ function getCRMContent() {
 function getSMSContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📱 SMS</h1>
+      <h1 class="text-3xl font-bold text-white">📱 SMS</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de SMS en desarrollo...</p>
       </div>
@@ -2824,7 +2818,7 @@ function getSMSContent() {
 function getFidelizacionContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🏆 Programa de Fidelización</h1>
+      <h1 class="text-3xl font-bold text-white">🏆 Programa de Fidelización</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de programa de fidelización en desarrollo...</p>
       </div>
@@ -2835,7 +2829,7 @@ function getFidelizacionContent() {
 function getConsultaMesesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📅 Consulta Meses</h1>
+      <h1 class="text-3xl font-bold text-white">📅 Consulta Meses</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de consulta de meses en desarrollo...</p>
       </div>
@@ -2846,7 +2840,7 @@ function getConsultaMesesContent() {
 function getPoncheContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">⏰ Ponche</h1>
+      <h1 class="text-3xl font-bold text-white">⏰ Ponche</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de ponche en desarrollo...</p>
       </div>
@@ -2857,7 +2851,7 @@ function getPoncheContent() {
 function getCajaContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">💳 Caja</h1>
+      <h1 class="text-3xl font-bold text-white">💳 Caja</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de caja en desarrollo...</p>
       </div>
@@ -2868,7 +2862,7 @@ function getCajaContent() {
 function getDocumentosAdminContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📋 Documentos Administrador</h1>
+      <h1 class="text-3xl font-bold text-white">📋 Documentos Administrador</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de documentos de administrador en desarrollo...</p>
       </div>
@@ -2879,7 +2873,7 @@ function getDocumentosAdminContent() {
 function getConciliacionComisionesContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🔄 Conciliación Comisiones</h1>
+      <h1 class="text-3xl font-bold text-white">🔄 Conciliación Comisiones</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de conciliación de comisiones en desarrollo...</p>
       </div>
@@ -2890,7 +2884,7 @@ function getConciliacionComisionesContent() {
 function getObjetivosVentaContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">📊 Objetivos de Venta</h1>
+      <h1 class="text-3xl font-bold text-white">📊 Objetivos de Venta</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de objetivos de venta en desarrollo...</p>
       </div>
@@ -2901,7 +2895,7 @@ function getObjetivosVentaContent() {
 function getAdministracionContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">⚙️ Administración</h1>
+      <h1 class="text-3xl font-bold text-white">⚙️ Administración</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de administración en desarrollo...</p>
       </div>
@@ -2912,7 +2906,7 @@ function getAdministracionContent() {
 function getPermisosContent() {
   return `
     <div class="space-y-6">
-      <h1 class="text-3xl font-bold text-white neon-text-blue">🔐 Permisos</h1>
+      <h1 class="text-3xl font-bold text-white">🔐 Permisos</h1>
       <div class="text-center py-8">
         <p class="text-gray-400">Módulo de permisos en desarrollo...</p>
       </div>
@@ -2926,13 +2920,13 @@ function getActivacionesAgenteContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">🔄 Agente de Activaciones</h2>
       </div>
       
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">📱 Sistema de Activaciones</h3>
         <p class="text-gray-400 mb-4">Formulario de Registro de Activaciones - Gestión de activaciones de servicios y equipos</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2952,13 +2946,13 @@ function getCambiosAgenteContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">🔄 Agente de Cambios</h2>
       </div>
       
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">🔄 Sistema de Cambios</h3>
         <p class="text-gray-400 mb-4">Formulario de Registro de Cambios - Gestión de cambios de equipos y servicios</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2978,13 +2972,13 @@ function getInventarioAgenteContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">📦 Agente de Inventario</h2>
       </div>
       
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">📦 Sistema de Inventario</h3>
         <p class="text-gray-400 mb-4">Formulario de Registro de Inventario - Control de stock y productos</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -3007,13 +3001,13 @@ function getSubsidiosAgenteContent() {
   return `
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">💰 Agente de Subsidios</h2>
       </div>
       
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">💰 Sistema de Subsidios</h3>
         <p class="text-gray-400 mb-4">Formulario de Registro de Subsidios - Gestión de subsidios y ayudas</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3034,14 +3028,14 @@ function getAgenteEquiposContent() {
   return `
     <div class="space-y-6 max-w-4xl mx-auto">
       <div class="flex items-center space-x-4">
-        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-white/5 text-white rounded-md transition-colors text-sm">
+        <button onclick="navegarA('gestion')" class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm">
           ← Volver a Gestión
         </button>
         <h2 class="text-2xl font-bold text-white">📱 Agente de Equipos</h2>
         <span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">CON VALIDACIONES IA ✅</span>
       </div>
       
-      <div class="glass-panel rounded-xl p-6">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 class="text-lg font-medium text-white mb-4">📋 Registro de Equipos</h3>
         <p class="text-gray-400 mb-6">Formulario inteligente con validación de IMEI y gestión completa de equipos</p>
         
@@ -3182,7 +3176,7 @@ function getAgenteEquiposContent() {
       </div>
 
       <!-- Panel de información -->
-      <div class="bg-gray-800 rounded-lg p-4 border border-white/10">
+      <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
         <h4 class="text-sm font-medium text-white mb-2">🤖 Funciones del Agente IA</h4>
         <ul class="text-sm text-gray-400 space-y-1">
           <li>• Validación automática de IMEI (15 dígitos)</li>
@@ -3199,7 +3193,7 @@ function getAgenteEquiposContent() {
 function manejarRegistroEquipo() {
   const form = document.getElementById('form-agente-equipos');
   const formDataObj = new FormData(form);
-
+  
   const imei = formDataObj.get('imei');
   function validarIMEI(imei) {
     if (!imei || (imei.length !== 15 && imei.length !== 20)) {
@@ -3210,10 +3204,10 @@ function manejarRegistroEquipo() {
     }
     return null;
   }
-
+  
   const error = validarIMEI(imei);
   const alertaDiv = document.getElementById('alerta-agente-equipos');
-
+  
   if (error) {
     alertaDiv.className = 'p-4 border-l-4 rounded-md bg-red-900 border-red-500 text-red-200';
     alertaDiv.textContent = error;
@@ -3236,7 +3230,7 @@ function manejarRegistroEquipo() {
   alertaDiv.className = 'p-4 border-l-4 rounded-md bg-green-900 border-green-500 text-green-200';
   alertaDiv.textContent = '✅ Equipo registrado correctamente en el sistema.';
   alertaDiv.style.display = 'block';
-
+  
   // Limpiar formulario después de 2 segundos
   setTimeout(() => {
     form.reset();
@@ -3247,7 +3241,7 @@ function manejarRegistroEquipo() {
 function validarIMEITiempoReal() {
   const imeiInput = document.querySelector('input[name="imei"]');
   const imei = imeiInput.value;
-
+  
   function validarIMEI(imei) {
     if (!imei || (imei.length !== 15 && imei.length !== 20)) {
       return "El IMEI debe tener exactamente 15 o 20 dígitos.";
@@ -3257,7 +3251,7 @@ function validarIMEITiempoReal() {
     }
     return null;
   }
-
+  
   const error = validarIMEI(imei);
   const errorSpan = document.getElementById('error-imei');
   if (error && imei.length > 0) {
