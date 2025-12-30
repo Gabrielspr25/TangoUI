@@ -6,7 +6,9 @@ import dotenv from 'dotenv';
 
 // Importar configuración de base de datos
 import { testConnection } from './config/database.js';
-import { createTables, insertSampleData } from './config/init-db.js';
+// import { createTables, insertSampleData } from './config/init-db.js'; // Deprecado por AgenteBaseDatos
+import { insertSampleData } from './config/init-db.js';
+import { agenteBaseDatos } from './agentes/AgenteBaseDatos.js';
 
 // Importar rutas
 import vendedoresRoutes from './routes/vendedores.js';
@@ -61,8 +63,8 @@ app.use('/api/upload', uploadRoutes);
 
 // Ruta de health check
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'Tango UI Backend',
     version: '1.0.0'
@@ -71,13 +73,13 @@ app.get('/health', (req, res) => {
 
 // Ruta raíz
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Sistema Claro API - Backend funcionando correctamente',
     version: '1.0.0',
     endpoints: [
       '/api/vendedores',
       '/api/ventas',
-      '/api/metas', 
+      '/api/metas',
       '/api/equipos',
       '/api/gestion/equipos',
       '/api/agentes',
@@ -115,9 +117,9 @@ const initializeServer = async () => {
       process.exit(1);
     }
 
-    // Crear tablas si no existen
-    await createTables();
-    
+    // Inicializar Agente de Base de Datos (Auto-Healing Schema)
+    await agenteBaseDatos.inicializar();
+
     // Insertar datos de ejemplo (solo en desarrollo) - DESHABILITADO
     // if (process.env.NODE_ENV === 'development') {
     //   await insertSampleData();
