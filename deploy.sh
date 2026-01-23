@@ -18,11 +18,11 @@ npm run build
 
 # Paso 2: Subir archivos
 echo "⬆️ Subiendo archivos al servidor..."
-scp -r dist/* root@$DROPLET_IP:/var/www/VentasProui/
+scp -r dist/* root@$DROPLET_IP:/var/www/sistema-claro/
 
 # Paso 3: Ajustar permisos y Reiniciar nginx
 echo "🔄 Ajustando permisos y recargando nginx..."
-ssh root@$DROPLET_IP "chown -R www-data:www-data /var/www/VentasProui && systemctl reload nginx"
+ssh root@$DROPLET_IP "chown -R www-data:www-data /var/www/sistema-claro && systemctl reload nginx"
 
 echo "✅ ¡Despliegue completado!"
 echo "🌐 Tu aplicación está disponible en: http://$DROPLET_IP"

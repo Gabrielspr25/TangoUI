@@ -187,6 +187,14 @@ function AgenteEquipos() {
         </ul>
       </div>
 
+      <div class="bg-gray-800 rounded-lg p-4 border border-gray-700" data-agent-tasks-panel="equipos">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-medium text-white">Tareas del Agente Equipos</h4>
+          <span class="text-xs text-gray-400" data-agent-task-count="equipos">0/0 completadas</span>
+        </div>
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm" data-agent-tasks="equipos"></div>
+      </div>
+
       <!-- Opciones de importación -->
       <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
         <h4 class="text-sm font-medium text-white mb-2">📥 Importación Masiva</h4>

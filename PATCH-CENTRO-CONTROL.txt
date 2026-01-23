@@ -1,0 +1,15 @@
+// Patch para agregar Centro de Control
+// Buscar línea 4 y agregar después de AgentePersonal:
+import CentroControlAgentes from './agentes/CentroControlAgentes.jsx'
+
+// Buscar línea 250 y agregar:
+centroControl: ['CREATOR']
+
+// Buscar línea 275 y agregar después de gestión:
+{ id: 'centroControl', icon: '🎛️', label: 'Centro de Control', badge: '🔒' },
+
+// Buscar línea 503 y agregar antes de agentesIA:
+case 'centroControl':
+  contentArea.innerHTML = '';
+  contentArea.appendChild(CentroControlAgentes());
+  break;

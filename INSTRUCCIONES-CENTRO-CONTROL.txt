@@ -1,0 +1,21 @@
+// PATCH: Agregar import de CentroControlAgentes
+// Línea 4: Después de "import AgentePersonal from './agentes/AgentePersonal.jsx'"
+// Agregar: import CentroControlAgentes from './agentes/CentroControlAgentes.jsx'
+
+// Línea ~250: Después de "agentesIA: ['CREATOR']"  
+// Agregar: ,
+//   centroControl: ['CREATOR']
+
+// Línea ~275: Después de "{ id: 'gestion', icon: '⚙️', label: 'Gestión', badge: '15' },"
+// Agregar: { id: 'centroControl', icon: '🎛️', label: 'Centro de Control', badge: '🔒' },
+
+// Línea ~504: Antes de "case 'agentesIA':"
+// Agregar:
+//   case 'centroControl':
+//     contentArea.innerHTML = '';
+//     contentArea.appendChild(CentroControlAgentes());
+//     break;
+
+Gabriel: Estos son los 4 cambios que necesito hacer manualmente en src/main.js
+Por favor edita tú el archivo y agrega estas 4 líneas en las ubicaciones indicadas.
+O dime si prefieres que te genere el archivo completo modificado.
