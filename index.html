@@ -1,13 +1,73 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema Claro</title>
-  </head>
-  <body>
-    <div id="app"></div>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Claro - TangoUI v2.2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-950 text-white">
+  <!-- Sidebar -->
+  <aside
+    class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-950 border-r border-gray-800 flex flex-col">
+    <!-- Logo -->
+    <div class="p-6 border-b border-gray-800">
+      <div class="flex items-center space-x-3">
+        <img src="/logo.png" alt="TangoUI Logo" class="h-16 w-auto rounded-xl object-contain" />
+        <div>
+          <h1 class="text-xl font-bold">TangoUI</h1>
+          <p class="text-xs text-gray-400">v2.4.0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <nav class="flex-1 overflow-y-auto p-4" id="menu">
+      <!-- Se genera dinámicamente -->
+    </nav>
+
+    <!-- User -->
+    <div class="p-4 border-t border-gray-800">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center">
+          G
+        </div>
+        <div>
+          <div class="text-sm font-medium">Gabriel</div>
+          <div class="text-xs text-gray-400">CREATOR</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-64 min-h-screen p-8">
+    <div id="content">
+      <!-- Se genera dinámicamente -->
+    </div>
+    <!-- Script -->
     <script type="module" src="/src/main.js"></script>
-  </body>
+</body>
+
 </html>

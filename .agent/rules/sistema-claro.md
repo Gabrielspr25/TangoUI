@@ -12,7 +12,7 @@
 **Tipo:** Sistema SaaS Multi-Usuario  
 **Tecnología:** Vite + Vanilla JavaScript + Tailwind CSS  
 **Base de Datos:** PostgreSQL  
-**Versión Actual:** **2.0.0** (23 de Enero, 2026)  
+**Versión Actual:** **2.3.0** (23 de Enero, 2026)  
 **Clasificación:** 🔒 CONFIDENCIAL
 
 ---
@@ -40,6 +40,80 @@
 ---
 
 ## 📜 HISTORIAL DE VERSIONES
+
+### **Versión 2.3.0** - 23 de Enero, 2026
+**🤖 SISTEMA DE PERSONALIZACIÓN + PANEL DE AGENTES IA COMPLETO**
+
+**Cambios Mayores:**
+- ✅ **Sistema de Temas** - Dark/Light mode con toggle funcional
+- ✅ **Paleta de Colores** -  6 paletas profesionales (gris, gris claro, azul, verde, rojo, morado)
+- ✅ **Control de Intensidad** - 2 sliders independientes (fondo 50-950, elementos 100-900)
+- ✅ **Contraste Automático** - Texto se ajusta según fondo (auto/claro/oscuro)
+- ✅ **Panel Agentes IA** - 17 agentes con reglas, tareas y progreso
+- ✅ **Centro de Control vs Agentes** - Separados correctamente
+- ✅ **CRUD Equipos** - Interfaz completa funcional (nombre, código, costo, externo)
+- ✅ **CRUD Usuarios** - 13 campos + alertas + recargas (gestión completa)
+
+**Módulos Actualizados:**
+- `agentesIA` - NUEVO módulo exclusivo CREATOR con 17 agentes
+- `centroControl` - Ahora accesible para CREATOR y ADMIN (sin aviso confidencial)
+- `personalizacion` - Sistema completo de temas y paletas
+
+**Centro de Control - 6 Tabs:**
+1. 📱 Gestión de Equipos (CRUD funcional)
+2. 💰 Gestión de Comisiones
+3. 👥 Gestión de Usuarios (CRUD completo con 13 campos)
+4. 📋 Gestión de Planes
+5. 🧾 Gestión de IVU
+6. 📄 Tipos de Contratos
+
+**Panel Agentes IA - 17 Agentes:**
+- 2 Activos | 7 En Desarrollo | 8 Planificados
+- Progreso Global: 31%
+- Estadísticas en tiempo real
+- Clasificados por fase (Crítico/Importante/Complementario/Avanzado)
+- Cada agente muestra: progreso, estado, reglas, tareas
+- PREPARADO para modal editable (siguiente versión)
+
+**Archivos Creados:**
+- `src/agentesData.js` - Datos completos de 17 agentes con reglas y tareas
+
+**Build:**
+- 📦 **39.70 KB** (vs 34.67 KB anterior)
+- ⚡ **Build en 1.46s**
+- 🎯 **FUNCIONANDO** en http://104.236.211.88
+
+---
+
+### **Versión 2.2.0** - 23 de Enero, 2026
+**🔄 RESETEO FRONTEND - SIMPLIFICACIÓN COMPLETA**
+
+**Cambios Mayores:**
+- ✅ **Eliminado React** - Frontend ahora es HTML/JS vanilla
+- ✅ **Eliminado src/ completo** - Reinicio desde cero
+- ✅ **Sistema simplificado** - Sin complejidad innecesaria
+- ✅ **Tailwind CDN** - Sin compilación CSS
+- ✅ **Centro de Control integrado** - Visible en menú lateral
+- ✅ **Logo con versión visible** - v2.2.0 siempre visible
+
+**Archivos Conservados:**
+- `docs/` - Toda documentación intacta
+- `BD/` - Análisis BD legacy (328 tablas)
+- `backend/` - Toda lógica del sistema
+- `.agent/rules/` - Reglas del proyecto
+- Scripts de deploy
+
+**Archivos Recreados:**
+- `index.html` - HTML limpio con Tailwind CDN
+- `src/main.js` - JavaScript vanilla, sin dependencias
+- `vite.config.js` - Configuración simplificada
+
+**Build:**
+- 📦 **6.41 KB** total (vs 211 KB anterior)
+- ⚡ **Build en 1.39s** (vs 3+ segundos)
+- 🎯 **FUNCIONANDO** en http://104.236.211.88
+
+---
 
 ### **Versión 2.1.0** - 23 de Enero, 2026
 **🗄️ ANÁLISIS BD LEGACY COMPLETADO**
